@@ -7,6 +7,9 @@ import { storeToRefs } from "pinia";
 
 
 const getClients = async( page: number ):Promise<Client[]> => {
+  //para demorar la respuesta
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+  
   const {data} = await clientesApi.get<{ data: Client[]}>(`/clients?_page=${page}`);
   return data.data
 }
