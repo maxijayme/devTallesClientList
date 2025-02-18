@@ -6,8 +6,8 @@ import { useClientsStore } from "@/store/clients";
 import { storeToRefs } from "pinia";
 
 
-const getClients = async():Promise<Client[]> => {
-  const {data} = await clientesApi.get<{ data: Client[]}>('/clients?_page=1');
+const getClients = async( page: number ):Promise<Client[]> => {
+  const {data} = await clientesApi.get<{ data: Client[]}>(`/clients?_page=${page}`);
   return data.data
 }
 
@@ -17,8 +17,8 @@ const useClients = () => {
   const {clients, currentPage, totalPages} = storeToRefs(store);
 
   const { isLoading, data } = useQuery({
-    queryKey: ['clients', 'page', 1],
-    queryFn:() => getClients(),
+    queryKey: ['clients', 'page', currentPage],
+    queryFn:() => getClients(currentPage.value),
   });
 
   watch(data, (clientsData) => {
