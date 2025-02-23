@@ -9,7 +9,7 @@ import { storeToRefs } from "pinia";
 const getClients = async( page: number ):Promise<Client[]> => {
   //para demorar la respuesta
   await new Promise((resolve) => setTimeout(resolve, 1000));
-  
+
   const {data} = await clientesApi.get<{ data: Client[]}>(`/clients?_page=${page}`);
   return data.data
 }
@@ -35,6 +35,7 @@ const useClients = () => {
     isLoading,
     clients,
     currentPage,
+    totalPages,
 
     //Methods
     setPage(page: number) {
@@ -42,11 +43,11 @@ const useClients = () => {
     },
 
     //Actions
-    totalPaginationNumbers: computed(
-      () => {
-        return Array.from({ length: totalPages.value }, (_, index) => index + 1);
-      }
-    )
+    // totalPaginationNumbers: computed(
+    //   () => {
+    //     return Array.from({ length: totalPages.value }, (_, index) => index + 1);
+    //   }
+    // )
   }
 }
 

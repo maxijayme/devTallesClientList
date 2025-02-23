@@ -1,8 +1,13 @@
 <script setup lang="ts">
+import { toRefs, type PropType } from 'vue';
 import { RouterLink } from 'vue-router';
-import useClients from '@/clients/composables/useClients';
+import type { Client } from "../interfaces/client";
 
-const {clients} = useClients()
+const props = defineProps({
+  clients: { type: Array as PropType<Client[]> }
+});
+
+const { clients } = toRefs(props);
 
 </script>
 
