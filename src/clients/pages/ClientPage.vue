@@ -2,23 +2,47 @@
 import LoadingModal from '@/shared/components/LoadingModal.vue';
 import { useRoute } from 'vue-router';
 import useClient from '../composables/useClient';
+import { useMutation } from '@tanstack/vue-query';
+import clientsApi from '@/api/clients-api';
+import type { Client } from '../interfaces/client';
 
 const id = useRoute().params.id;
 
 const {client, isLoading} = useClient(+id);
 
+const updateClient = async( client:Client ):Promise<Client> => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const {data} = await clientsApi.patch<Client>(`clients/${client.id}`, client);
+  return data;
+}
+
+const clientMutation = useMutation<Client, Error, Client>({
+  mutationFn: updateClient,
+});
+
 </script>
 
 <template>
-  <h3>Guardando...</h3>
-  <h3>Guardo</h3>
+  <h3 v-if="clientMutation.isPending.value">Guardando...</h3>
+  <h3 v-if="clientMutation.isSuccess.value">Guardado</h3>
   <LoadingModal v-if=isLoading />
-  <div>
-    <h1>PEPE</h1>
-    <form></form>
-      <input type="text" placeholder="Nombre del cliente"/>
-      <input type="text" placeholder="Dirección"/>
-      <button type="submit">Guardar</button>
+  <div v-if="client">
+    <h1>{{ client.name }}</h1>
+    <form @submit.prevent="clientMutation.mutate(client)">
+      <input
+      type="text"
+      placeholder="Nombre del cliente"
+      v-model="client.name"/>
+      <input
+      type="text"
+      placeholder="Dirección"
+      v-model="client.address"/>
+      <button
+        :disabled="clientMutation.isPending.value"
+        type="submit"
+      >Guardar</button>
+
+    </form>
   </div>
   <code>
     {{ client }}

@@ -3,7 +3,7 @@ import { ref, toRefs, watch } from 'vue';
 
 interface Props {
   currentPage: number;
-  totalPages: number[];
+  totalPages: number;
 }
 
 interface Emit {

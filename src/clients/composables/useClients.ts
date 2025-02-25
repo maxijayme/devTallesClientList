@@ -1,4 +1,4 @@
-import { computed, watch } from "vue";
+import { watch } from "vue";
 import clientesApi from "@/api/clients-api";
 import { useQuery } from "@tanstack/vue-query";
 import type { Client } from "../interfaces/client";

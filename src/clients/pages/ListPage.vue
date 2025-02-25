@@ -17,7 +17,7 @@ const {isLoading, clients, currentPage, totalPages, setPage} = useClients();
     <!-- PaginationNumbers -->
      <PaginationNumbers :currentPage :totalPages @setPage="setPage"/>
     <!-- LoadingModal -->
-     <LoadingModal v-if="isLoading"/>>
+     <LoadingModal v-if="isLoading"/>
   </div>
 </template>
 
