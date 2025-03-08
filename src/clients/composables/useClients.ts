@@ -28,7 +28,7 @@ const useClients = () => {
     if (clientsData) {
       store.setClients(clientsData);
     }
-  })
+  }, {immediate: true});
 
   return {
     //Properties

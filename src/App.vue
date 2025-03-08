@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { VueQueryDevtools } from '@tanstack/vue-query-devtools'
 import { RouterLink, RouterView } from 'vue-router'
 import IconPinia from '@/shared/components/icons/IconPinia.vue'
 </script>
 
 <template>
+  <VueQueryDevtools />
   <header>
     <IconPinia/>
 

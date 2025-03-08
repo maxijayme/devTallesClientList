@@ -3,16 +3,23 @@ import LoadingModal from '@/shared/components/LoadingModal.vue';
 import { useRoute } from 'vue-router';
 import useClient from '../composables/useClient';
 import { useMutation } from '@tanstack/vue-query';
+//import { useQueryClient } from '@tanstack/vue-query';
 import clientsApi from '@/api/clients-api';
 import type { Client } from '../interfaces/client';
 
 const id = useRoute().params.id;
+//const queryClient = useQueryClient();
 
 const {client, isLoading} = useClient(+id);
 
 const updateClient = async( client:Client ):Promise<Client> => {
   await new Promise((resolve) => setTimeout(resolve, 2000));
   const {data} = await clientsApi.patch<Client>(`clients/${client.id}`, client);
+  //const queries = queryClient.getQueryCache().clear();//borra toda la cache
+  //const queries = queryClient.getQueryCache().findAll({ queryKey: ['clients','page'], exact: false });
+  // queries.forEach((query) => { query.reset() });//borra la cache de cada pagina
+  //queries.forEach((query) => { query.fetch() }); // refresca la cache de cada pagina
+
   return data;
 }
 
