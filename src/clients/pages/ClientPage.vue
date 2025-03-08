@@ -2,32 +2,16 @@
 import LoadingModal from '@/shared/components/LoadingModal.vue';
 import { useRoute, useRouter } from 'vue-router';
 import useClient from '../composables/useClient';
-import { useMutation } from '@tanstack/vue-query';
-//import { useQueryClient } from '@tanstack/vue-query';
-import clientsApi from '@/api/clients-api';
-import type { Client } from '../interfaces/client';
+
 import { watch } from 'vue';
 
 const id = useRoute().params.id;
 const router = useRouter();
-//const queryClient = useQueryClient();
 
-const {client, isLoading, isError} = useClient(+id);
+const {client, isUpdating, isUpdated, isLoading, isError, updateClient} = useClient(+id);
 
-const updateClient = async( client:Client ):Promise<Client> => {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
-  const {data} = await clientsApi.patch<Client>(`clients/${client.id}`, client);
-  //const queries = queryClient.getQueryCache().clear();//borra toda la cache
-  //const queries = queryClient.getQueryCache().findAll({ queryKey: ['clients','page'], exact: false });
-  // queries.forEach((query) => { query.reset() });//borra la cache de cada pagina
-  //queries.forEach((query) => { query.fetch() }); // refresca la cache de cada pagina
 
-  return data;
-}
 
-const clientMutation = useMutation<Client, Error, Client>({
-  mutationFn: updateClient,
-});
 
 watch(isError, () => {
   router.replace('/clients');
@@ -36,12 +20,12 @@ watch(isError, () => {
 </script>
 
 <template>
-  <h3 v-if="clientMutation.isPending.value">Guardando...</h3>
-  <h3 v-if="clientMutation.isSuccess.value">Guardado</h3>
+  <h3 v-if="isUpdating">Guardando...</h3>
+  <h3 v-if="isUpdated">Guardado</h3>
   <LoadingModal v-if=isLoading />
   <div v-if="client">
     <h1>{{ client.name }}</h1>
-    <form @submit.prevent="clientMutation.mutate(client)">
+    <form @submit.prevent="updateClient(client)">
       <input
       type="text"
       placeholder="Nombre del cliente"
@@ -51,7 +35,7 @@ watch(isError, () => {
       placeholder="Dirección"
       v-model="client.address"/>
       <button
-        :disabled="clientMutation.isPending.value"
+        :disabled="isUpdating"
         type="submit"
       >Guardar</button>
 
